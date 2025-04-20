@@ -348,7 +348,10 @@
 -r:"Library/Bee/artifacts/200b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/200b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/EnemyController.cs"
+"Assets/Scripts/EnemyHealthbar.cs"
+"Assets/Scripts/EnemySpawner.cs"
 "Assets/Scripts/PlayerController.cs"
+"Assets/Scripts/PlayerHealthbar.cs"
 -langversion:9.0
 
 /deterministic
