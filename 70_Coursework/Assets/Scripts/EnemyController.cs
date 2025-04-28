@@ -3,16 +3,17 @@ using UnityEngine.AI;
 using UnityEngine.Pool;
 
 public class EnemyController : MonoBehaviour {
-    [SerializeField, Range(0, 250)] public int maxHealth = 100;
-    [SerializeField] public EnemyHealthbar healthbar;
-    [SerializeField] public int currentHealth;
-    [SerializeField] public AudioClip deathSound;
+    [SerializeField, Range(0, 250)] private int maxHealth = 100;
 
+    public int droppedGold;
+    public PlayerController playerController;
+    public EnemyHealthbar healthbar;
+
+    private int currentHealth;
     private int damage = 5;
     private NavMeshAgent navMeshAgent;
     private float attackCooldown = -10f;
     private GameObject player;
-    private PlayerController playerController;
     private IObjectPool<EnemyController> enemyPool;
 
     private void Awake() {
@@ -27,7 +28,9 @@ public class EnemyController : MonoBehaviour {
 
     private void FixedUpdate() {
         // Change target destination to player position
-        navMeshAgent.destination = player.transform.position;
+        if (!playerController.inSafeZone) {
+            navMeshAgent.destination = player.transform.position;
+        }
 
         // If within distance of player, deal damage
         if (Vector3.Distance(gameObject.transform.position, player.transform.position) <= 3f) {
@@ -40,6 +43,7 @@ public class EnemyController : MonoBehaviour {
     }
 
     public void SetPool(IObjectPool<EnemyController> pool) {
+        // Put enemy in pool on spawn
         enemyPool = pool;
     }
 
@@ -48,8 +52,6 @@ public class EnemyController : MonoBehaviour {
         healthbar.SetHealth(currentHealth);
 
         if (currentHealth <= 0) {
-            // Cant use an audio source attached to the enemy as it would not play after the enemy is released from the pool
-            AudioSource.PlayClipAtPoint(deathSound, transform.position);
             enemyPool.Release(this);
         }
     }

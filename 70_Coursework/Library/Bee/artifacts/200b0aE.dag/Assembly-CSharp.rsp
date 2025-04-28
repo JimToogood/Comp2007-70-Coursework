@@ -350,8 +350,16 @@
 "Assets/Scripts/EnemyController.cs"
 "Assets/Scripts/EnemyHealthbar.cs"
 "Assets/Scripts/EnemySpawner.cs"
+"Assets/Scripts/ParticleSpawner.cs"
+"Assets/Scripts/PauseMenuHandler.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/PlayerHealthbar.cs"
+"Assets/Scripts/RespawnController.cs"
+"Assets/Scripts/SafeZoneChecker.cs"
+"Assets/Scripts/SaveDataManager.cs"
+"Assets/Scripts/ShopHandler.cs"
+"Assets/Scripts/ShopKeeperController.cs"
+"Assets/Scripts/UITextController.cs"
 -langversion:9.0
 
 /deterministic
