@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour {
     private ShopKeeperController shopKeeperController;
     private Camera camera;
     private Animator gunAnimator;
+    private SaveDataManager saveDataManager;
 
     private void Awake() {
         // Initialise variables
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour {
         shopKeeperController = shopKeeper.GetComponent<ShopKeeperController>();
         camera = Camera.main;
         gunAnimator = GetComponentInChildren<Animator>();
+        saveDataManager = GameObject.FindGameObjectWithTag("SaveManager").GetComponent<SaveDataManager>();
 
         groundCheckDistance = (playerCollider.height / 2f) + 0.2f;      // 0.2f of leeway is added to make jump input feel more responsive
         currentMaxSpeed = maxSpeed;
@@ -300,6 +302,16 @@ public class PlayerController : MonoBehaviour {
             if (currentHealth <= 0) {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                // Remove gold as punishment for dying, and reset current health and position to avoid death loop
+                gold /= 2;
+                if (gold < 0) {
+                    gold = 0;
+                }
+                currentHealth = maxHealth;
+                rb.transform.position = Vector3.zero;
+                saveDataManager.Save();
+                
                 SceneManager.LoadScene("DeathScene");
             }
         }

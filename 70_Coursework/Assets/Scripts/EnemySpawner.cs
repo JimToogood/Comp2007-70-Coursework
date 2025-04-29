@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour {
     private ParticleSpawner particleSpawner;
     private AudioSource audioSource;
     private IObjectPool<EnemyController> enemyPool;
-    private float spawnCooldown = -10f;
+    private float spawnCooldown = 0f;
     private int activePoolSize = 0;
 
     private void Awake() {

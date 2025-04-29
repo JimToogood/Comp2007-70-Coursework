@@ -359,6 +359,7 @@
 "Assets/Scripts/SaveDataManager.cs"
 "Assets/Scripts/ShopHandler.cs"
 "Assets/Scripts/ShopKeeperController.cs"
+"Assets/Scripts/StartSceneController.cs"
 "Assets/Scripts/UITextController.cs"
 -langversion:9.0
 
