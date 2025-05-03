@@ -6,6 +6,7 @@ public class ParticleSpawner : MonoBehaviour {
     [SerializeField] private GameObject particlePrefab;
     [SerializeField] private float particleLifetime;
     [SerializeField] private AudioClip audioClip = null;
+    [SerializeField] private float audioVolume;
 
     private IObjectPool<GameObject> particlePool;
     private AudioSource audioSource = null;
@@ -26,7 +27,7 @@ public class ParticleSpawner : MonoBehaviour {
         if (audioClip != null) {
             // Play audio at particle location
             audioSource.transform.position = spawnPosition;
-            audioSource.PlayOneShot(audioSource.clip, 3f);
+            audioSource.PlayOneShot(audioSource.clip, audioVolume);
         }
     }
 

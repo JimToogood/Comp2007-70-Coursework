@@ -7,17 +7,14 @@ public class EnemySpawner : MonoBehaviour {
 
     [SerializeField] private Transform[] spawnpoints;
     [SerializeField] private EnemyController enemyPrefab;
-    [SerializeField] private AudioClip deathSound;
 
     private ParticleSpawner particleSpawner;
-    private AudioSource audioSource;
     private IObjectPool<EnemyController> enemyPool;
     private float spawnCooldown = 0f;
     private int activePoolSize = 0;
 
     private void Awake() {
         particleSpawner = GetComponent<ParticleSpawner>();
-        audioSource = GetComponentInChildren<AudioSource>();
         enemyPool = new ObjectPool<EnemyController>(CreateEnemy, OnSpawn, OnRelease);
     }
 
@@ -36,9 +33,6 @@ public class EnemySpawner : MonoBehaviour {
         activePoolSize --;
         particleSpawner.SpawnParticle(enemy.transform.position);
         enemy.playerController.ChangeGold(enemy.droppedGold);
-
-        audioSource.transform.position = enemy.transform.position;
-        audioSource.PlayOneShot(audioSource.clip, 0.75f);
 
         enemy.gameObject.SetActive(false);
         // spawnCooldown also functions as respawnCooldown

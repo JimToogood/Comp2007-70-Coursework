@@ -27,17 +27,18 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        // Change target destination to player position
+        // Turn enemy AI off when player enters safe zone
         if (!playerController.inSafeZone) {
+            // Change target destination to player position
             navMeshAgent.destination = player.transform.position;
-        }
 
-        // If within distance of player, deal damage
-        if (Vector3.Distance(gameObject.transform.position, player.transform.position) <= 3f) {
-            // Only deal damage once every second max
-            if (Time.time >= attackCooldown + 1f) {
-                attackCooldown = Time.time;
-                playerController.TakeDamage(damage);
+            // If within distance of player, deal damage
+            if (Vector3.Distance(gameObject.transform.position, player.transform.position) <= 3f) {
+                // Only deal damage once every second max
+                if (Time.time >= attackCooldown + 1f) {
+                    attackCooldown = Time.time;
+                    playerController.TakeDamage(damage);
+                }
             }
         }
     }

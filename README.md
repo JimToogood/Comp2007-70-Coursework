@@ -16,3 +16,9 @@ grass.png - www.freestylized.com/material/grass_02/
 dirt.png - www.freestylized.com/material/ground_with_rocks_01/  
 rock.png - www.freestylized.com/material/cliff_rocks_02/  
 snow.png - www.freestylized.com/material/snow_01/  
+grass_blade.png - www.freepnglogos.com/images/grass-9213.html  
+rock2.png - www.freestylized.com/material/concrete_wall_02/  
+path.png - www.freestylized.com/material/ground_06/  
+wood.png - www.freestylized.com/material/wood_planks_05/  
+bricks.png - www.freestylized.com/material/bricks_wall_03/  
+roof.png - www.freestylized.com/material/roof_tiles_02/  

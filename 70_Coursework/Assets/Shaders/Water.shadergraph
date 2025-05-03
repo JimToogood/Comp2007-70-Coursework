@@ -1188,10 +1188,10 @@
     "m_Guid": {
         "m_GuidSerialized": "0b48ef17-3b81-485a-bbaf-6ec79911ba1a"
     },
-    "m_Name": "Ripple",
+    "m_Name": "Ripple Seed",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Ripple",
-    "m_DefaultReferenceName": "_Ripple",
+    "m_RefNameGeneratedByDisplayName": "Ripple Seed",
+    "m_DefaultReferenceName": "_Ripple_Seed",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -1481,7 +1481,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "4477581454804d738df98549762c3ea3",
     "m_Id": 0,
-    "m_DisplayName": "Ripple",
+    "m_DisplayName": "Ripple Seed",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
