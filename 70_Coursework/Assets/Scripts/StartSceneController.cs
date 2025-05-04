@@ -1,9 +1,10 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class StartSceneController : MonoBehaviour {
+    [SerializeField] private GameManagerScript sceneLoader;
+
     public void StartGame() {
         Debug.Log("Starting Game...");
-        SceneManager.LoadScene("Game");
+        sceneLoader.LoadScene("Game");
     }
 }

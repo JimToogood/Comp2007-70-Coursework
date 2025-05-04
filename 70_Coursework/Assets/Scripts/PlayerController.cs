@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class PlayerController : MonoBehaviour {
@@ -38,7 +37,7 @@ public class PlayerController : MonoBehaviour {
     private float shootCooldown = -10f;
     private float reloadCooldown = -10f;
     private bool inputsDisabled = false;
-    private string currentMenu = "";
+    private bool isDead = false;
     private Vector3 velocity = Vector3.zero;
 
     private Rigidbody rb;
@@ -46,9 +45,10 @@ public class PlayerController : MonoBehaviour {
     private CapsuleCollider playerCollider;
     private ParticleSpawner hitParticleSpawner;
     private ShopKeeperController shopKeeperController;
-    private Camera camera;
+    private Camera playerCamera;
     private Animator gunAnimator;
     private SaveDataManager saveDataManager;
+    private GameManagerScript sceneLoader;
 
     private void Awake() {
         // Initialise variables
@@ -58,9 +58,10 @@ public class PlayerController : MonoBehaviour {
         playerCollider = GetComponentInChildren<CapsuleCollider>();
         hitParticleSpawner = GetComponentInChildren<ParticleSpawner>();
         shopKeeperController = shopKeeper.GetComponent<ShopKeeperController>();
-        camera = Camera.main;
+        playerCamera = Camera.main;
         gunAnimator = GetComponentInChildren<Animator>();
         saveDataManager = GameObject.FindGameObjectWithTag("SaveManager").GetComponent<SaveDataManager>();
+        sceneLoader = FindObjectOfType<GameManagerScript>();
 
         groundCheckDistance = (playerCollider.height / 2f) + 0.2f;      // 0.2f of leeway is added to make jump input feel more responsive
         currentMaxSpeed = maxSpeed;
@@ -105,8 +106,8 @@ public class PlayerController : MonoBehaviour {
         // Clamp the rotation so the player cant look behind themselves
         rotationX = Mathf.Clamp(rotationX - mouseInput.y, -90f, 90f);
 
-        // Rotate the camera vertically
-        camera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+        // Rotate the playerCamera vertically
+        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
 
         // Rotate the player horizontally
         rb.transform.Rotate(Vector3.up * mouseInput.x);
@@ -193,11 +194,11 @@ public class PlayerController : MonoBehaviour {
             audioSource.PlayOneShot(shootSound, 0.3f);
             gunAnimator.Play("GunKickback");
 
-            // Rotate camera slightly to simulate gun kick back
+            // Rotate playerCamera slightly to simulate gun kick back
             rotationX -= 2f;
 
             RaycastHit hit;
-            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range)) {
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range)) {
                 if (hit.collider != playerCollider) {
                     // Spawn hit particle at hit location
                     hitParticleSpawner.SpawnParticle(hit.point);
@@ -223,6 +224,7 @@ public class PlayerController : MonoBehaviour {
                 TogglePause(true);
             } else {
                 // If in shop menu
+                rb.constraints = RigidbodyConstraints.FreezeRotation;
                 shopKeeperController.ToggleShop();
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
@@ -255,11 +257,9 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             // If within 3 units of the shop keeper
             if (Vector3.Distance(playerCollider.transform.position, shopKeeper.transform.position) < 3f) {
-                // Reset velocities so player stops moving when opening the shop
-                rb.velocity = Vector3.zero;
-                velocity = Vector3.zero;
+                // RigidbodyConstraints.FreezeAll stops player from moving when shop is open
+                rb.constraints = RigidbodyConstraints.FreezeAll;
                 shopKeeperController.ToggleShop();
-
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 inputsDisabled = true;
@@ -280,12 +280,12 @@ public class PlayerController : MonoBehaviour {
     private void ToggleAim(bool isAiming) {
         if (isAiming) {
             // Aim
-            camera.fieldOfView = 55f;
-            gunTransform.localPosition = new Vector3(-0.01f, gunTransform.localPosition.y, gunTransform.localPosition.z);
+            playerCamera.fieldOfView = 55f;
+            gunTransform.localPosition = new Vector3(0f, gunTransform.localPosition.y, gunTransform.localPosition.z);
             currentMaxSpeed = maxSpeed / 3f;
         } else {
             // Unaim
-            camera.fieldOfView = 75f;
+            playerCamera.fieldOfView = 75f;
             gunTransform.localPosition = new Vector3(0.35f, gunTransform.localPosition.y, gunTransform.localPosition.z);
             currentMaxSpeed = maxSpeed;
         }
@@ -295,24 +295,22 @@ public class PlayerController : MonoBehaviour {
         // Stop the playing taking damage when in the safe zone
         if (!inSafeZone) {
             currentHealth -= damage;
+            if (currentHealth < 0) {
+                currentHealth = 0;
+            }
+
             healthbar.SetHealth(currentHealth);
             healthText.text = currentHealth.ToString() + " / " + maxHealth.ToString();
             audioSource.PlayOneShot(damageSound, 0.4f);
 
-            if (currentHealth <= 0) {
+            if (currentHealth <= 0 && !isDead) {
+                isDead = true;
+
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-
-                // Remove gold as punishment for dying, and reset current health and position to avoid death loop
-                gold /= 2;
-                if (gold < 0) {
-                    gold = 0;
-                }
-                currentHealth = maxHealth;
-                rb.transform.position = Vector3.zero;
                 saveDataManager.Save();
-                
-                SceneManager.LoadScene("DeathScene");
+
+                sceneLoader.LoadScene("DeathScene");
             }
         }
     }
@@ -407,5 +405,20 @@ public class PlayerController : MonoBehaviour {
             // Pause the game when player alt tabs or switches away from game
             TogglePause(false);
         }
+    }
+
+    public void PunishDeath() {
+        Debug.Log("Adding death punishment...");
+        // Half current gold, reset current health, reset current position
+        gold /= 2;
+        if (gold < 0) {
+            gold = 0;
+        }
+        currentHealth = maxHealth;
+        rb.transform.position = Vector3.zero;
+
+        goldText.text = gold.ToString();
+        healthbar.SetHealth(currentHealth);
+        healthText.text = currentHealth.ToString() + " / " + maxHealth.ToString();
     }
 }

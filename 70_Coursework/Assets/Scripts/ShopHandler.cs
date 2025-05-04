@@ -25,9 +25,9 @@ public class ShopHandler : MonoBehaviour {
 
     public void AmmoButton() {
         if (player.ChangeGold(-10)) {
-            UITextController.DisplayText("Bought +10 bullets!");
+            UITextController.DisplayText("Bought +25 bullets!");
             audioSource.PlayOneShot(buySound, 0.5f);
-            player.ChangeMaxBullets(15);
+            player.ChangeMaxBullets(25);
         } else {
             UITextController.DisplayText("Not enough gold!");
         }

@@ -16,6 +16,11 @@ public class SaveDataManager : MonoBehaviour {
         filePath = Path.Combine(Application.dataPath, "saveData.json");     // Save file = gameDict/Assets/saveData.json
 
         Load();
+
+        string loadSource = GameManagerScript.instance.loadSource;
+        if (loadSource == "DeathScene") {
+            player.PunishDeath();
+        }
     }
 
     private void OnApplicationQuit(){

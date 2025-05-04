@@ -8,17 +8,19 @@ public class EnemyController : MonoBehaviour {
     public int droppedGold;
     public PlayerController playerController;
     public EnemyHealthbar healthbar;
+    public NavMeshAgent navMeshAgent;
 
     private int currentHealth;
     private int damage = 5;
-    private NavMeshAgent navMeshAgent;
     private float attackCooldown = -10f;
     private GameObject player;
     private IObjectPool<EnemyController> enemyPool;
+    private Animator animator;
 
     private void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         playerController = player.GetComponent<PlayerController>();
+        animator = GetComponentInChildren<Animator>();
 
         navMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -33,7 +35,7 @@ public class EnemyController : MonoBehaviour {
             navMeshAgent.destination = player.transform.position;
 
             // If within distance of player, deal damage
-            if (Vector3.Distance(gameObject.transform.position, player.transform.position) <= 3f) {
+            if (Vector3.Distance(transform.position, player.transform.position) <= 3f) {
                 // Only deal damage once every second max
                 if (Time.time >= attackCooldown + 1f) {
                     attackCooldown = Time.time;
@@ -41,6 +43,9 @@ public class EnemyController : MonoBehaviour {
                 }
             }
         }
+
+        // If moving, play walking animation
+        animator.SetBool("IsMoving", navMeshAgent.velocity.magnitude > 1f);
     }
 
     public void SetPool(IObjectPool<EnemyController> pool) {
