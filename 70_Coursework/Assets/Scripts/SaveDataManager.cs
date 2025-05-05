@@ -13,7 +13,7 @@ public class SaveDataManager : MonoBehaviour {
     private void Start() {
         keyLength = encryptionKey.Length;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        filePath = Path.Combine(Application.dataPath, "saveData.json");     // Save file = gameDict/Assets/saveData.json
+        filePath = Path.Combine(Application.persistentDataPath, "saveData.json");
 
         Load();
 
