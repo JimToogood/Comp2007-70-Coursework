@@ -1,4 +1,4 @@
-This is the repository for my 70% Coursework for the Comp2007 Game Development Module in Unity 2021.2, by Jim Toogood.  
+This is the repository for my 70% Coursework for the Comp2007 Game Development Module in Unity 2021.2, by Jim Toogood. Link to the Itch.io page: https://jihtito.itch.io/comp2007-unity-game  
 
 All textures and sounds used in this project are copyright-free and licensed for free use. All rights remain with their respective creators as listed below. This project does not claim ownership of any of the third-party assets cited.  
 

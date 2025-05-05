@@ -382,6 +382,11 @@ public class PlayerController : MonoBehaviour {
             SetDefaultAttributes();
         }
 
+        if (currentHealth <= 0) {
+            // Handles if player closes the game on the death screen
+            PunishDeath();
+        }
+
         // Update UI
         healthbar.SetMaxHealth(maxHealth);
         healthbar.SetHealth(currentHealth);

@@ -12,16 +12,13 @@ public class PauseMenuHandler : MonoBehaviour {
         player.TogglePause(true);
     }
 
-    public void SettingsButton() {
-        // Add settings menu here later
-        Debug.Log("Settings");
-    }
-
     public void ExitButton() {
-        // Add save logic here later
-        Application.Quit();
-        
-        // Application.Quit does not work in the Editor
-        UnityEditor.EditorApplication.isPlaying = false;
+        #if UNITY_EDITOR
+            // If in the editor, exit play mode
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            // If not in the editor, quit the application
+            Application.Quit();
+        #endif
     }
 }
